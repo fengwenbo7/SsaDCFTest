@@ -27,6 +27,10 @@ printf "========================================================================
 printf "libcjson install complete!"
 printf "========================================================================\n"
 
+#firewall
+systemctl stop firewalld.service
+systemctl disable firewalld.service
+
 #libdcf
 cd /usr/local/src
 git clone https://github.com/fengwenbo7/SsaDCFTest.git
