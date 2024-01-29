@@ -1,1 +1,6 @@
-[{"stream_id" : 1, "node_id" : 1, "ip" : "192.168.187.139", "port" : 29322,"role" : "LEADER"}, {"stream_id" : 1, "node_id" : 2, "ip" : "192.168.187.140", "port" : 29322, "role" : "FOLLOWER"}, {"stream_id" : 1, "node_id" : 3, "ip" : "192.168.187.141", "port" : 29322, "role" : "FOLLOWER"} ]
+[{"stream_id" : 1, "node_id" : 1, "ip" : "192.168.187.139", "port" : 29322,"role" : "LEADER","group":0}, 
+{"stream_id" : 1, "node_id" : 2, "ip" : "192.168.187.140", "port" : 29322, "role" : "FOLLOWER","group":0}, 
+{"stream_id" : 1, "node_id" : 3, "ip" : "192.168.187.141", "port" : 29322, "role" : "FOLLOWER","group":0}, 
+{"stream_id" : 1, "node_id" : 4, "ip" : "192.168.187.142", "port" : 29322, "role" : "FOLLOWER","group":1} , 
+{"stream_id" : 1, "node_id" : 5, "ip" : "192.168.187.143", "port" : 29322, "role" : "LEADER","group":1} , 
+{"stream_id" : 1, "node_id" : 6, "ip" : "192.168.187.144", "port" : 29322, "role" : "FOLLOWER","group":1} ]
