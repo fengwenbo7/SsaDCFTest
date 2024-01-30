@@ -61,14 +61,14 @@ int main(int argc, char *argv[])
     char *dcf_start_config = (char *)malloc(1024);
 
     // 尝试以1-5作为node_id启动DCF
-    for (node_id = 1; node_id <= 5; node_id++)
+    for (node_id = 1; node_id <= 10; node_id++)
     {
         if (DCFTest_start(node_id, dcf_start_config) == 0) 
         {
             break;
         }
 
-        if (node_id == 5) 
+        if (node_id == 10) 
         {
             printf("\033[31m[ FAILED ]\033[0m failed to start with node_id 1 to 5.\n");
         }
