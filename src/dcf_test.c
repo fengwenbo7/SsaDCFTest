@@ -9,6 +9,7 @@
 #include <time.h>
 #include <unistd.h>
 #include <fcntl.h>
+#include "cJSON.h"
 #ifdef WIN32
 #include <windows.h>
 #define cm_sleep(ms) Sleep(ms)
@@ -36,9 +37,45 @@ static void sig_proc(int signal)
 
 bool isleader = false;
 
-void *start_server(void *fd)
+void *start_server(void* param)
 {
-    DCFTest_back();
+    bool get_item=false;
+    const char* target_node_ip;
+    const char* config=(const char*)param;
+    cJSON* config_json=cJSON_Parse(config);
+    do { if ((cJSON_IsArray(config_json)) != 1) { (cJSON_Delete(config_json)); return; } } while (0);
+
+    cJSON* config_item=NULL;
+    config_item=cJSON_GetObjectItem(config_json,"node_id");
+    int target_node_id=config_item->valueint;
+    printf("\033[32m[ PASSED ]\033[0m Target Node Id:%d.\n",target_node_id);
+
+    config_item=cJSON_GetObjectItem(config_json,"node_config");
+    const char* target_cluster_config=cJSON_GetStringValue(config_item);
+
+    cJSON *stream_list = cJSON_Parse(target_cluster_config);
+    do { if ((cJSON_IsArray(stream_list)) != 1) { (cJSON_Delete(stream_list)); return; } } while (0);
+    cJSON *stream_item = NULL;
+    cJSON_ArrayForEach(stream_item, stream_list) {
+        do { if ((cJSON_IsObject(stream_item)) != 1) { (cJSON_Delete(stream_list)); return; } } while (0);
+        cJSON *cfg_item = NULL;
+        cfg_item = cJSON_GetObjectItem(stream_item, "node_id");
+        if(target_node_id == cfg_item->valueint){
+            cfg_item = cJSON_GetObjectItem(stream_item, "ip");
+            target_node_ip=cJSON_GetStringValue(cfg_item);
+            get_item=true;
+            break;
+        }
+    }
+    cJSON_Delete(stream_list);
+
+    if(get_item){
+        printf("\033[32m[ PASSED ]\033[0m Target Node ip:%s.\n",target_node_ip);
+        DCFTest_back(target_node_ip);
+    }else{
+        printf("\033[31m[ FAILED ]\033[0m Get Node Info Failed.\n");
+    }
+    
 }
 
 int main(int argc, char *argv[])
@@ -60,7 +97,7 @@ int main(int argc, char *argv[])
     int node_id = 1;
     char *dcf_start_config = (char *)malloc(1024);
 
-    // 尝试以1-5作为node_id启动DCF
+    // 尝试以1-10作为node_id启动DCF
     for (node_id = 1; node_id <= 10; node_id++)
     {
         if (DCFTest_start(node_id, dcf_start_config) == 0) 
@@ -70,14 +107,17 @@ int main(int argc, char *argv[])
 
         if (node_id == 10) 
         {
-            printf("\033[31m[ FAILED ]\033[0m failed to start with node_id 1 to 5.\n");
+            printf("\033[31m[ FAILED ]\033[0m failed to start with node_id 1 to 10.\n");
         }
     }
     
 
     // 打开后端msg服务
     pthread_t back_tid;
-    if (pthread_create(&back_tid , NULL , start_server, NULL) == -1)
+    startNodeParam param;
+    param.node_id=node_id;
+    param.node_config=dcf_start_config;
+    if (pthread_create(&back_tid , NULL , start_server, &param) == -1)
     {
         printf("\033[31m[ FAILED ]\033[0m pthread create failed.\n");
     }

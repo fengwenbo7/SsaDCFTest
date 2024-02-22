@@ -13,8 +13,13 @@
 
 extern bool isleader;
 
-
 #ifndef STRUCT_INPUTBUFFER
+typedef struct
+{
+    int node_id;
+    char* node_config;
+} startNodeParam;
+
 typedef struct
 {
     char *buffer;

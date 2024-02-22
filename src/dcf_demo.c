@@ -238,6 +238,7 @@ int DCFTest_start(int node_id, char *dcf_start_config)
         return FAILED;
     }
 
+    printf("dcf_demo 241");
     // 启动DCF
     if (dcf_start(node_id, dcf_start_config) == 0)
     {
@@ -245,6 +246,7 @@ int DCFTest_start(int node_id, char *dcf_start_config)
         char templog[128];
         sprintf(templog, "\033[32m[ PASSED ]\033[0m dcf start succeed, node_id = %d.\n", node_id);
         strcat(printlog, templog);
+        printf("%s", printlog);
     }
     else
     {
@@ -252,10 +254,10 @@ int DCFTest_start(int node_id, char *dcf_start_config)
         char templog[128];
         sprintf(templog, "\033[31m[ FAILED ]\033[0m dcf start failed, node_id = %d.\n", node_id);
         strcat(printlog, templog);
+        printf("%s", printlog);
         return FAILED;
     }
 
-    printf("%s", printlog);
     return PASSED;
 }
 

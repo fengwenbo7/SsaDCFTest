@@ -25,4 +25,4 @@
 int DCFTest_msg(char *ip, char *msg, char *rec);
 
 /* DCFTest服务器处理接收客户端消息函数 */
-int DCFTest_back();
+int DCFTest_back(const char* ip_addr);

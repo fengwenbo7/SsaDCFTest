@@ -110,7 +110,7 @@ void *recv_message(void *fd)
 }
 
 /* 后端处理接收客户端消息函数 */
-int DCFTest_back()
+int DCFTest_back(const char* ip_addr)
 {
 	//声明套接字
 	int listenfd , connfd;
@@ -133,7 +133,7 @@ int DCFTest_back()
 	/*(2) 初始化地址结构*/
 	bzero(&servaddr , sizeof(servaddr));
 	servaddr.sin_family = AF_INET;
-	servaddr.sin_addr.s_addr = htonl(INADDR_ANY);
+	servaddr.sin_addr.s_addr = inet_addr(ip_addr);
 	servaddr.sin_port = htons(PORT);
 
 	/*(3) 绑定套接字和端口*/
